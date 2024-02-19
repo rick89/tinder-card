@@ -5,27 +5,26 @@ import {ReactNode, useState, useRef} from 'react';
 type TinderCardProps = {
   renderCard: (item: DataType) => ReactNode;
   renderNoMoreCards?: () => void;
-  onSwipeRight: (item: DataType) => void;
-  onSwipeLeft: (item: DataType) => void;
-  currentCardIndex: number;
-  card: DataType;
+  data: DataType[];
 };
 
 type Direction = 'left' | 'right';
 
-export const TinderCard = ({
-  renderCard,
-
-  onSwipeLeft,
-  onSwipeRight,
-  currentCardIndex,
-  card,
-}: TinderCardProps) => {
-  const position = useRef(new Animated.ValueXY()).current;
-
+export const TinderCard = ({renderCard, data}: TinderCardProps) => {
   const SCREEN_WIDTH = Dimensions.get('window').width;
   const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
   const SWIPE_OUT_DURATION = 250;
+
+  const position = useRef(new Animated.ValueXY()).current;
+  let [currentCardIndex, setCurrentCardIndex] = useState(0);
+  let card = data[currentCardIndex];
+
+  const onSwipeLeft = () => {
+    setCurrentCardIndex(previousCardIndex => previousCardIndex + 1);
+  };
+  const onSwipeRight = () => {
+    setCurrentCardIndex(previousCardIndex => previousCardIndex - 1);
+  };
 
   const panResponder = useRef(
     PanResponder.create({
@@ -35,10 +34,25 @@ export const TinderCard = ({
         position.setValue({x: gestureState.dx, y: gestureState.dy});
       },
       onPanResponderRelease: (e, gestureState) => {
+        const swipedRight = gestureState.dx > SWIPE_THRESHOLD;
+        const swipedLeft = gestureState.dx < -SWIPE_THRESHOLD;
+        console.log('currentCardIndex', currentCardIndex);
+        if (currentCardIndex === 0 && swipedRight) {
+          resetPosition();
+          return;
+        }
+        if (
+          (swipedRight && currentCardIndex === 0) ||
+          (swipedLeft && currentCardIndex === data.length)
+        ) {
+          console.log('currentPosition', currentCardIndex);
+          resetPosition();
+          return;
+        }
         // console.log('onPanResponderRelease');
-        if (gestureState.dx > SWIPE_THRESHOLD) {
+        if (swipedRight) {
           forceSwipe('right');
-        } else if (gestureState.dx < -SWIPE_THRESHOLD) {
+        } else if (swipedLeft) {
           forceSwipe('left');
         } else {
           resetPosition();
@@ -60,7 +74,7 @@ export const TinderCard = ({
   };
 
   const onSwipeComplete = (direction: Direction) => {
-    direction === 'right' ? onSwipeRight(card) : onSwipeLeft(card);
+    direction === 'right' ? onSwipeRight() : onSwipeLeft();
     position.setValue({x: 0, y: 0});
   };
 
@@ -73,26 +87,26 @@ export const TinderCard = ({
   };
 
   const renderCards = () => {
-    // return data.map((item, index) => {
-    //   if (index < currentCardIndex) {
-    //     // console.log('return null for ', index);
-    //     return null;
-    //   }
+    return data.map((item, index) => {
+      if (index < currentCardIndex) {
+        // console.log('return null for ', index);
+        return null;
+      }
 
-    //   if (index === currentCardIndex) {
-    // console.log('ANIMATE ', index);
-    return (
-      <Animated.View
-        key={card.id}
-        style={getCardLayout()}
-        {...panResponder.panHandlers}>
-        {renderCard(card)}
-      </Animated.View>
-    );
-    //   }
-    //   console.log('DONT ANIMATE ', index);
-    //   renderCard(item);
-    // });
+      if (index === currentCardIndex) {
+        console.log('ANIMATE ', index);
+        return (
+          <Animated.View
+            key={card.id}
+            style={getCardLayout()}
+            {...panResponder.panHandlers}>
+            {renderCard(card)}
+          </Animated.View>
+        );
+      }
+      console.log('DONT ANIMATE ', index);
+      renderCard(item);
+    });
   };
 
   const getCardLayout = () => {
