@@ -5,114 +5,125 @@
  * @format
  */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, SafeAreaView, Image} from 'react-native';
+import {TinderCard} from './components/tinder-card';
+import {avatarImage} from './images/avatar-1.jpg';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+export type DataType = {
+  id: number;
+  text: string;
+  content: string;
+  image: string;
+};
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
+const DATA: DataType[] = [
+  {
+    id: 1,
+    text: 'Card #1',
+    content: 'Lorem ipsum dolors sit amet...',
+    image: avatarImage,
+  },
+  {
+    id: 2,
+    text: 'Card #2',
+    content: 'Lorem ipsum dolors sit amet...',
+    image: avatarImage,
+  },
+  {
+    id: 3,
+    text: 'Card #3',
+    content: 'Lorem ipsum dolors sit amet...',
+    image: avatarImage,
+  },
+  {
+    id: 4,
+    text: 'Card #4',
+    content: 'Lorem ipsum dolors sit amet...',
+    image: avatarImage,
+  },
+  {
+    id: 5,
+    text: 'Card #5',
+    content: 'Lorem ipsum dolors sit amet...',
+    image: avatarImage,
+  },
+  {
+    id: 6,
+    text: 'Card #6',
+    content: 'Lorem ipsum dolors sit amet...',
+    image: avatarImage,
+  },
+  {
+    id: 7,
+    text: 'Card #7',
+    content: 'Lorem ipsum dolors sit amet...',
+    image: avatarImage,
+  },
+  {
+    id: 8,
+    text: 'Card #8',
+    content: 'Lorem ipsum dolors sit amet...',
+    image: avatarImage,
+  },
+];
+console.log('avatarImage', avatarImage);
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const renderCard = (item: DataType) => {
+    const uri = Image.resolveAssetSource({uri: item.image}).uri;
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    return (
+      <View
+        key={item.id}
+        style={{
+          height: 500,
+          width: 280,
+          borderWidth: 1,
+          borderColor: '#999',
+          borderRadius: 15,
+          padding: 10,
+        }}>
+        <Text
+          style={{
+            fontSize: 22,
+            marginVertical: 10,
+          }}>
+          {item.text}
+        </Text>
+        <Image
+          style={{backgroundColor: '#efefef'}}
+          height={300}
+          width={260}
+          source={{uri}}
+        />
+        <Text style={{marginTop: 10}}>{item.content}</Text>
+      </View>
+    );
+  };
+
+  const onSwipeLeft = (item: DataType) => {
+    console.log('onSwipeLeft OUTSIDE', item);
+  };
+  const onSwipeRight = (item: DataType) => {
+    console.log('onSwipeRight OUTSIDE', item);
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+    <SafeAreaView>
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+        }}>
+        <TinderCard
+          onSwipeRight={item => onSwipeRight(item)}
+          onSwipeLeft={item => onSwipeLeft(item)}
+          data={DATA}
+          renderCard={renderCard}
+        />
+      </View>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;
