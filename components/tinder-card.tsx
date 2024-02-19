@@ -5,20 +5,21 @@ import {ReactNode, useState, useRef} from 'react';
 type TinderCardProps = {
   renderCard: (item: DataType) => ReactNode;
   renderNoMoreCards?: () => void;
-  data: DataType[];
   onSwipeRight: (item: DataType) => void;
   onSwipeLeft: (item: DataType) => void;
   currentCardIndex: number;
+  card: DataType;
 };
 
 type Direction = 'left' | 'right';
 
 export const TinderCard = ({
   renderCard,
-  data,
+
   onSwipeLeft,
   onSwipeRight,
   currentCardIndex,
+  card,
 }: TinderCardProps) => {
   const position = useRef(new Animated.ValueXY()).current;
 
@@ -30,11 +31,11 @@ export const TinderCard = ({
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove(e, gestureState) {
-        console.log('onPanResponderMove');
+        // console.log('onPanResponderMove');
         position.setValue({x: gestureState.dx, y: gestureState.dy});
       },
       onPanResponderRelease: (e, gestureState) => {
-        console.log('onPanResponderRelease');
+        // console.log('onPanResponderRelease');
         if (gestureState.dx > SWIPE_THRESHOLD) {
           forceSwipe('right');
         } else if (gestureState.dx < -SWIPE_THRESHOLD) {
@@ -59,13 +60,12 @@ export const TinderCard = ({
   };
 
   const onSwipeComplete = (direction: Direction) => {
-    const item = data[currentCardIndex];
-    direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item);
+    direction === 'right' ? onSwipeRight(card) : onSwipeLeft(card);
     position.setValue({x: 0, y: 0});
   };
 
   const resetPosition = () => {
-    console.log('resetPosition()');
+    // console.log('resetPosition()');
     Animated.spring(position, {
       useNativeDriver: false,
       toValue: {x: 0, y: 0},
@@ -73,26 +73,26 @@ export const TinderCard = ({
   };
 
   const renderCards = () => {
-    return data.map((item, index) => {
-      if (index < currentCardIndex) {
-        console.log('return null for ', index);
-        return null;
-      }
+    // return data.map((item, index) => {
+    //   if (index < currentCardIndex) {
+    //     // console.log('return null for ', index);
+    //     return null;
+    //   }
 
-      if (index === currentCardIndex) {
-        console.log('ANIMATE ', index);
-        return (
-          <Animated.View
-            key={item.id}
-            style={getCardLayout()}
-            {...panResponder.panHandlers}>
-            {renderCard(item)}
-          </Animated.View>
-        );
-      }
-      console.log('DONT ANIMATE ', index);
-      renderCard(item);
-    });
+    //   if (index === currentCardIndex) {
+    // console.log('ANIMATE ', index);
+    return (
+      <Animated.View
+        key={card.id}
+        style={getCardLayout()}
+        {...panResponder.panHandlers}>
+        {renderCard(card)}
+      </Animated.View>
+    );
+    //   }
+    //   console.log('DONT ANIMATE ', index);
+    //   renderCard(item);
+    // });
   };
 
   const getCardLayout = () => {
