@@ -8,6 +8,7 @@ type TinderCardProps = {
   data: DataType[];
   onSwipeRight: (item: DataType) => void;
   onSwipeLeft: (item: DataType) => void;
+  currentCardIndex: number;
 };
 
 type Direction = 'left' | 'right';
@@ -17,8 +18,8 @@ export const TinderCard = ({
   data,
   onSwipeLeft,
   onSwipeRight,
+  currentCardIndex,
 }: TinderCardProps) => {
-  const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const position = useRef(new Animated.ValueXY()).current;
 
   const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -29,9 +30,11 @@ export const TinderCard = ({
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove(e, gestureState) {
+        console.log('onPanResponderMove');
         position.setValue({x: gestureState.dx, y: gestureState.dy});
       },
       onPanResponderRelease: (e, gestureState) => {
+        console.log('onPanResponderRelease');
         if (gestureState.dx > SWIPE_THRESHOLD) {
           forceSwipe('right');
         } else if (gestureState.dx < -SWIPE_THRESHOLD) {
@@ -44,6 +47,7 @@ export const TinderCard = ({
   ).current;
 
   const forceSwipe = (direction: Direction) => {
+    console.log('force swipe', direction);
     const x = (direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH) * 2;
     Animated.timing(position, {
       useNativeDriver: false,
@@ -55,13 +59,13 @@ export const TinderCard = ({
   };
 
   const onSwipeComplete = (direction: Direction) => {
-    setCurrentCardIndex(currentCardIndex + 1);
     const item = data[currentCardIndex];
     direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item);
     position.setValue({x: 0, y: 0});
   };
 
   const resetPosition = () => {
+    console.log('resetPosition()');
     Animated.spring(position, {
       useNativeDriver: false,
       toValue: {x: 0, y: 0},
@@ -71,10 +75,12 @@ export const TinderCard = ({
   const renderCards = () => {
     return data.map((item, index) => {
       if (index < currentCardIndex) {
+        console.log('return null for ', index);
         return null;
       }
 
       if (index === currentCardIndex) {
+        console.log('ANIMATE ', index);
         return (
           <Animated.View
             key={item.id}
@@ -84,6 +90,7 @@ export const TinderCard = ({
           </Animated.View>
         );
       }
+      console.log('DONT ANIMATE ', index);
       renderCard(item);
     });
   };

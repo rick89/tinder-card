@@ -102,12 +102,12 @@ function App(): React.JSX.Element {
   };
 
   const onSwipeLeft = (item: DataType) => {
-    console.log('onSwipeLeft OUTSIDE', item);
+    setCurrentCardIndex(currentCardIndex++);
   };
   const onSwipeRight = (item: DataType) => {
-    console.log('onSwipeRight OUTSIDE', item);
+    setCurrentCardIndex(currentCardIndex--);
   };
-
+  let [currentCardIndex, setCurrentCardIndex] = useState(0);
   return (
     <SafeAreaView>
       <View
@@ -116,6 +116,7 @@ function App(): React.JSX.Element {
           alignItems: 'center',
         }}>
         <TinderCard
+          currentCardIndex={currentCardIndex}
           onSwipeRight={item => onSwipeRight(item)}
           onSwipeLeft={item => onSwipeLeft(item)}
           data={DATA}
