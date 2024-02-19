@@ -19,7 +19,7 @@ export const TinderCard = ({
   onSwipeRight,
 }: TinderCardProps) => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
-  let position = new Animated.ValueXY();
+  const position = useRef(new Animated.ValueXY()).current;
 
   const SCREEN_WIDTH = Dimensions.get('window').width;
   const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
@@ -45,13 +45,11 @@ export const TinderCard = ({
 
   const forceSwipe = (direction: Direction) => {
     const x = (direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH) * 2;
-    console.log('force swipe');
     Animated.timing(position, {
       useNativeDriver: false,
       toValue: {x, y: 0},
       duration: SWIPE_OUT_DURATION,
     }).start(() => {
-      console.log('start swipe completed');
       onSwipeComplete(direction);
     });
   };
@@ -73,12 +71,10 @@ export const TinderCard = ({
   const renderCards = () => {
     return data.map((item, index) => {
       if (index < currentCardIndex) {
-        console.log('return null for -> ', index);
         return null;
       }
 
       if (index === currentCardIndex) {
-        console.log('ANIMATE currentCardIndex -> ', currentCardIndex);
         return (
           <Animated.View
             key={item.id}
@@ -88,7 +84,6 @@ export const TinderCard = ({
           </Animated.View>
         );
       }
-      console.log('NO ANIMATE -> ', index);
       renderCard(item);
     });
   };
