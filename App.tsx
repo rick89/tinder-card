@@ -107,7 +107,9 @@ function App(): React.JSX.Element {
   const onSwipeRight = (item: DataType) => {
     setCurrentCardIndex(currentCardIndex--);
   };
+
   let [currentCardIndex, setCurrentCardIndex] = useState(0);
+
   return (
     <SafeAreaView>
       <View
