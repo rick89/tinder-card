@@ -1,2 +1,3 @@
 # tinder-card
-A tinder like card, swipeable 
+
+A tinder like card, swipeable
