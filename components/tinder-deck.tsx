@@ -28,7 +28,18 @@ export const TinderDeck = ({data}: TinderDeckProps) => {
           }}>
           {item.text}
         </Text>
-        <Image style={{backgroundColor: '#efefef'}} height={300} width={260} />
+        <Image
+          resizeMode={'contain'}
+          style={{
+            backgroundColor: '#efefef',
+            flex: 1,
+            height: undefined,
+            width: undefined,
+          }}
+          source={require('../images/avatar-1.jpg')}
+          height={300}
+          width={260}
+        />
         <Text style={{marginTop: 10}}>{item.content}</Text>
       </View>
     );

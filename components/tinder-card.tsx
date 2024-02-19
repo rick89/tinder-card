@@ -37,18 +37,7 @@ export const TinderCard = ({renderCard, data}: TinderCardProps) => {
         const swipedRight = gestureState.dx > SWIPE_THRESHOLD;
         const swipedLeft = gestureState.dx < -SWIPE_THRESHOLD;
         console.log('currentCardIndex', currentCardIndex);
-        if (currentCardIndex === 0 && swipedRight) {
-          resetPosition();
-          return;
-        }
-        if (
-          (swipedRight && currentCardIndex === 0) ||
-          (swipedLeft && currentCardIndex === data.length)
-        ) {
-          console.log('currentPosition', currentCardIndex);
-          resetPosition();
-          return;
-        }
+
         // console.log('onPanResponderRelease');
         if (swipedRight) {
           forceSwipe('right');

@@ -1,14 +1,5 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React, {useState} from 'react';
-import {View, Text, SafeAreaView, Image} from 'react-native';
-import {TinderCard} from './components/tinder-card';
-import {avatarImage} from './images/avatar-1.jpg';
+import React from 'react';
+import {View, SafeAreaView} from 'react-native';
 import {TinderDeck} from './components/tinder-deck';
 
 export type DataType = {
@@ -23,52 +14,52 @@ const DATA: DataType[] = [
     id: 1,
     text: 'Card #1',
     content: 'Lorem ipsum dolors sit amet...',
-    image: avatarImage,
+    image: '/Users/ric/Sites/animations/images/avatar-1.jpg',
   },
   {
     id: 2,
     text: 'Card #2',
     content: 'Lorem ipsum dolors sit amet...',
-    image: avatarImage,
+    image: '/Users/ric/Sites/animations/images/avatar-1.jpg',
   },
   {
     id: 3,
     text: 'Card #3',
     content: 'Lorem ipsum dolors sit amet...',
-    image: avatarImage,
+    image: '/Users/ric/Sites/animations/images/avatar-1.jpg',
   },
   {
     id: 4,
     text: 'Card #4',
     content: 'Lorem ipsum dolors sit amet...',
-    image: avatarImage,
+    image: '/Users/ric/Sites/animations/images/avatar-1.jpg',
   },
   {
     id: 5,
     text: 'Card #5',
     content: 'Lorem ipsum dolors sit amet...',
-    image: avatarImage,
+    image: '/Users/ric/Sites/animations/images/avatar-1.jpg',
   },
   {
     id: 6,
     text: 'Card #6',
     content: 'Lorem ipsum dolors sit amet...',
-    image: avatarImage,
+    image: '/Users/ric/Sites/animations/images/avatar-1.jpg',
   },
   {
     id: 7,
     text: 'Card #7',
     content: 'Lorem ipsum dolors sit amet...',
-    image: avatarImage,
+    image: '/Users/ric/Sites/animations/images/avatar-1.jpg',
   },
   {
     id: 8,
     text: 'Card #8',
     content: 'Lorem ipsum dolors sit amet...',
-    image: avatarImage,
+    image: '/Users/ric/Sites/animations/images/avatar-1.jpg',
   },
 ];
-console.log('avatarImage', avatarImage);
+console.log('avatarImage', './images/avatar-1.jpg');
 function App(): React.JSX.Element {
   return (
     <SafeAreaView>
